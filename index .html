@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detektif Sejarah Lokal Jambi - Fase E Kelas X</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome untuk Ikon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        jambi: {
+                            gold: '#D4AF37',
+                            red: '#8B0000',
+                            darkred: '#5B0000',
+                            bg: '#1A1C23',
+                            card: '#252836',
+                            accent: '#3B82F6'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        title: ['Cinzel', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 8px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #1e2029;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #374151;
+            border-radius: 4px;
+        }
+        .glass-panel {
+            background: rgba(37, 40, 54, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 15px rgba(212, 175, 55, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(212, 175, 55, 0.8); }
+        }
+        .glow-active {
+            animation: pulse-glow 2s infinite;
+        }
+    </style>
+</head>
+<body class="bg-jambi-bg text-gray-100 font-sans min-h-screen flex flex-col justify-between selection:bg-jambi-gold selection:text-black">
+
+    <!-- Navigation / Header -->
+    <header class="border-b border-gray-800 bg-jambi-card/90 backdrop-filter blur-md sticky top-0 z-50 px-4 py-3">
+        <div class="max-w-6xl mx-auto flex flex-wrap justify-between items-center gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-jambi-red to-jambi-gold flex items-center justify-center shadow-lg text-white font-bold text-xl">
+                    <i class="fa-solid font-title">J</i>
+                </div>
+                <div>
+                    <h1 class="font-title font-bold text-lg md:text-xl text-jambi-gold leading-tight">DETEKTIF SEJARAH JAMBI</h1>
+                    <p class="text-xs text-gray-400">Modul Penelitian Sejarah • Kurikulum Merdeka Fase E (Kelas X)</p>
+                </div>
+            </div>
+
+            <!-- Stats Bar -->
+            <div class="flex items-center space-x-4 bg-gray-900/80 px-4 py-2 rounded-xl border border-gray-800 text-sm">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-star text-amber-400"></i>
+                    <span>Skor: <strong id="score-display" class="text-amber-400 font-bold">0</strong></span>
+                </div>
+                <div class="h-4 w-[1px] bg-gray-700"></div>
+                <div class="flex items-center space-x-2">
+                    <i class="fa-solid fa-award text-jambi-gold"></i>
+                    <span id="rank-display" class="text-xs text-gray-300 font-semibold">Peneliti Pemula</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Container -->
+    <main class="max-w-6xl w-full mx-auto p-4 md:p-6 flex-grow flex flex-col justify-center">
+
+        <!-- GAME STAGE INDICATOR -->
+        <div id="stage-stepper" class="mb-6 overflow-x-auto pb-2">
+            <div class="flex items-center justify-between min-w-[600px] text-xs font-semibold">
+                <div id="step-btn-1" class="step-item flex flex-col items-center flex-1 active-step">
+                    <div class="step-icon w-9 h-9 rounded-full bg-jambi-gold text-black flex items-center justify-center font-bold mb-1 shadow-lg">1</div>
+                    <span class="text-jambi-gold">1. Heuristik</span>
+                </div>
+                <div class="h-[2px] w-8 bg-gray-700 -mt-4"></div>
+                <div id="step-btn-2" class="step-item flex flex-col items-center flex-1 opacity-50">
+                    <div class="step-icon w-9 h-9 rounded-full bg-gray-800 border border-gray-700 text-gray-400 flex items-center justify-center font-bold mb-1">2</div>
+                    <span class="text-gray-400">2. Kritik Sumber</span>
+                </div>
+                <div class="h-[2px] w-8 bg-gray-700 -mt-4"></div>
+                <div id="step-btn-3" class="step-item flex flex-col items-center flex-1 opacity-50">
+                    <div class="step-icon w-9 h-9 rounded-full bg-gray-800 border border-gray-700 text-gray-400 flex items-center justify-center font-bold mb-1">3</div>
+                    <span class="text-gray-400">3. Interpretasi</span>
+                </div>
+                <div class="h-[2px] w-8 bg-gray-700 -mt-4"></div>
+                <div id="step-btn-4" class="step-item flex flex-col items-center flex-1 opacity-50">
+                    <div class="step-icon w-9 h-9 rounded-full bg-gray-800 border border-gray-700 text-gray-400 flex items-center justify-center font-bold mb-1">4</div>
+                    <span class="text-gray-400">4. Historiografi</span>
+                </div>
+                <div class="h-[2px] w-8 bg-gray-700 -mt-4"></div>
+                <div id="step-btn-5" class="step-item flex flex-col items-center flex-1 opacity-50">
+                    <div class="step-icon w-9 h-9 rounded-full bg-gray-800 border border-gray-700 text-gray-400 flex items-center justify-center font-bold mb-1">5</div>
+                    <span class="text-gray-400">5. Kuis Refleksi</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- DYNAMIC CONTENT CARD -->
+        <div id="game-card" class="glass-panel rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden transition-all duration-300">
+            <!-- Content render dynamically via JavaScript -->
+        </div>
+
+    </main>
+
+    <!-- Feedback Modal -->
+    <div id="feedback-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center z-50 p-4">
+        <div class="bg-jambi-card border border-gray-700 rounded-2xl max-w-md w-full p-6 text-center shadow-2xl transform transition-all scale-95 opacity-0" id="modal-box">
+            <div id="modal-icon" class="w-16 h-16 mx-auto rounded-full flex items-center justify-center text-3xl mb-4"></div>
+            <h3 id="modal-title" class="text-xl font-bold mb-2"></h3>
+            <p id="modal-desc" class="text-gray-300 text-sm mb-6 leading-relaxed"></p>
+            <button id="modal-btn" onclick="closeModal()" class="w-full py-3 bg-gradient-to-r from-jambi-gold to-yellow-600 text-black font-bold rounded-xl shadow-lg hover:brightness-110 transition">
+                Lanjutkan Tahap
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 py-4 text-center text-xs text-gray-500 bg-jambi-card/30">
+        <p>Media Pembelajaran Interaktif Sejarah Indonesia Kelas X Fase E • Topik: Tahapan Penelitian Sejarah Lokal Jambi</p>
+    </footer>
+
+    <script>
+        // Game State Management
+        const gameState = {
+            currentStage: 1,
+            score: 0,
+            heuristikCollected: [],
+            kritikAnswers: {},
+            interpretasiMatched: 0,
+            historiografiParagraphs: [],
+            quizIndex: 0,
+            quizScore: 0
+        };
+
+        // Data Game Penelitian Sejarah
+        const gameData = {
+            stage1: {
+                title: "TAHAP 1: HEURISTIK (PENGUMPULAN SUMBER)",
+                misi: "Misi Kamu: Kelompokkan 6 bukti sejarah lokal Jambi di bawah ini ke dalam kategori yang tepat (Sumber Primer, Sumber Sekunder, atau Lisan)!",
+                items: [
+                    { id: 1, name: "Prasasti Karang Brahi (686 M)", category: "primer", desc: "Prasasti batu peninggalan Kedatuan Sriwijaya di Merangin, Jambi.", type: "Benda/Tulisan Primer" },
+                    { id: 2, name: "Naskah Incung Kerinci", category: "primer", desc: "Naskah kuno pada tanduk/bambu tulisan incung dari masyarakat Kerinci.", type: "Tulisan Primer" },
+                    { id: 3, name: "Buku 'Kerajaan Melayu Jambi' karya Sejarawan Modern", category: "sekunder", desc: "Buku kajian sejarah karya sejarawan zaman sekarang.", type: "Sekunder" },
+                    { id: 4, name: "Wawancara Tetua Adat Muaro Jambi", category: "lisan", desc: "Penjelasan langsung dari pemangku adat tentang tradisi lokal.", type: "Lisan" },
+                    { id: 5, name: "Sisa Candi Gumpung Kompleks Muaro Jambi", category: "primer", desc: "Bangunan bata merah peninggalan masa Melayu-Buddha.", type: "Benda Primer" },
+                    { id: 6, name: "Artikel Jurnal Digital Penelitian Candi 2023", category: "sekunder", desc: "Artikel ilmiah hasil tinjauan peneliti masa kini.", type: "Sekunder" }
+                ]
+            },
+            stage2: {
+                title: "TAHAP 2: KRITIK SUMBER (VERIFIKASI)",
+                misi: "Misi Kamu: Lakukan Kritik Ekstern (Keaslian Fisik) dan Kritik Intern (Kredibilitas Isi) terhadap Naskah Kuno Jambi!",
+                questions: [
+                    {
+                        id: 'q1',
+                        title: "1. Pengujian Keaslian Umur Bahan (Kritik Ekstern)",
+                        context: "Ditemukan gulungan naskah berbahasa Melayu Kuno Jambi. Langkah apa yang paling tepat untuk menguji KEASLIAN FISIK naskah tersebut?",
+                        options: [
+                            { text: "Menganalisis jenis tinta dan uji penanggalan karbon (Carbon-14) pada media naskah.", correct: true, exp: "Benar! Kritik ekstern menguji fisik sumber (bahan, kertas/daun, tinta, usia bahan)." },
+                            { text: "Langsung mempercayai isi cerita dalam naskah tanpa memeriksa fisik naskah.", correct: false, exp: "Salah! Itu mengabaikan verifikasi keaslian fisik." },
+                            { text: "Membandingkan sudut pandang penulis naskah dengan penulis asing.", correct: false, exp: "Salah! Membandingkan isi/sudut pandang adalah bagian dari Kritik Intern." }
+                        ]
+                    },
+                    {
+                        id: 'q2',
+                        title: "2. Pengujian Kredibilitas Isi (Kritik Intern)",
+                        context: "Dalam catatan seorang pedagang asing abad ke-14, disebutkan bahwa Jambi adalah pusat perdagangan lada utama. Bagaimana cara membuktikan kebenaran isi (Kritik Intern) catatan ini?",
+                        options: [
+                            { text: "Memeriksa apakah kertas catatan tersebut terbuat dari kayu jati.", correct: false, exp: "Salah! Memeriksa kertas adalah bagian dari kritik ekstern." },
+                            { text: "Membandingkannya (korelasi) dengan bukti arkeologis keramik Cina & catatan peninggalan lokal Jambi periode sejenis.", correct: true, exp: "Benar! Kritik intern mencocokkan kebenaran isi dengan bukti penyerta lainnya." },
+                            { text: "Mengubah isi catatan agar sesuai dengan opini pribadi peneliti.", correct: false, exp: "Salah! Peneliti tidak boleh memanipulasi data sejarah." }
+                        ]
+                    }
+                ]
+            },
+            stage3: {
+                title: "TAHAP 3: INTERPRETASI (PENAFSIRAN FAKTA)",
+                misi: "Misi Kamu: Hubungkan fakta-fakta sejarah Muaro Jambi berikut untuk menyimpulkan sintesis sejarah yang logis!",
+                pairs: [
+                    { fact: "Ditemukan ribuan fragmen keramik Dinasti Song & Tang di Kompleks Candi Muaro Jambi.", meaning: "Jambi merupakan pusat perdagangan internasional yang ramai pada abad 9-13 M." },
+                    { fact: "Adanya sisa-sisa stupa, struktur bata luas, dan arca Buddha Prajnaparamita.", meaning: "Kompleks Muaro Jambi berfungsi sebagai pusat belajar dan peribadatan agama Buddha kawasan Asia Tenggara." },
+                    { fact: "Lokasi percandian berada tepat di sepanjang aluran Sungai Batanghari.", meaning: "Sungai Batanghari merupakan urat nadi transportasi utama kehidupan sosial-ekonomi Kerajaan Melayu Jambi." }
+                ]
+            },
+            stage4: {
+                title: "TAHAP 4: HISTORIOGRAFI (PENULISAN SEJARAH)",
+                misi: "Misi Kamu: Susunlah paragraf-paragraf acak mengenai kisah perjuangan Sultan Thaha Syaifuddin dari Jambi menjadi urutan narasi kronologis yang runtut!",
+                paragraphs: [
+                    { id: "p1", text: "1. Pada pertengahan abad ke-19, Sultan Thaha Syaifuddin naik tahta menjadi Kesultanan Jambi dan dengan tegas menolak memperbarui perjanjian yang merugikan rakyat dengan Belanda.", order: 1 },
+                    { id: "p2", text: "2. Menanggapi ketegangan tersebut, Belanda menyerang Istana Tanah Pilih Jambi pada tahun 1858, yang memicu Perang Gerilya sengit di pedalaman Batanghari.", order: 2 },
+                    { id: "p3", text: "3. Perjuangan tanpa henti terus dilakukan Sultan Thaha hingga beliau gugur di Tanah Garo pada tahun 1904, dan ditetapkan sebagai Pahlawan Nasional dari Jambi.", order: 3 }
+                ]
+            },
+            stage5: {
+                title: "EVALUASI & REKAPITULASI PENELITIAN",
+                questions: [
+                    {
+                        q: "Urutan tahapan metode penelitian sejarah yang benar sesuai simulasi adalah...",
+                        a: ["Heuristik -> Kritik -> Interpretasi -> Historiografi", "Kritik -> Heuristik -> Interpretasi -> Historiografi", "Historiografi -> Interpretasi -> Heuristik -> Kritik"],
+                        c: 0
+                    },
+                    {
+                        q: "Mencari prasasti Karang Brahi atau Naskah Incung langsung di situs lokal Jambi termasuk dalam tahap...",
+                        a: ["Historiografi", "Heuristik (Pengumpulan Sumber)", "Interpretasi"],
+                        c: 1
+                    },
+                    {
+                        q: "Menguji keaslian fisik bahan Naskah Kuno dinamakan...",
+                        a: ["Kritik Ekstern", "Kritik Intern", "Historiografi Tradisional"],
+                        c: 0
+                    },
+                    {
+                        q: "Tahap merangkai fakta-fakta sejarah menjadi sebuah tulisan/kisah sejarah yang utuh dinamakan...",
+                        a: ["Interpretasi", "Heuristik", "Historiografi"],
+                        c: 2
+                    }
+                ]
+            }
+        };
+
+        // Initialize App
+        window.onload = function() {
+            renderStage(1);
+        };
+
+        function updateHeader() {
+            document.getElementById('score-display').innerText = gameState.score;
+            let rank = "Peneliti Pemula";
+            if (gameState.score >= 150) rank = "Sejarawan Muda Jambi";
+            if (gameState.score >= 300) rank = "Ahli Historiografi Jambi";
+            document.getElementById('rank-display').innerText = rank;
+
+            // Update Stepper UI
+            for(let i=1; i<=5; i++) {
+                const stepEl = document.getElementById(`step-btn-${i}`);
+                if (!stepEl) continue;
+                const icon = stepEl.querySelector('.step-icon');
+                const text = stepEl.querySelector('span');
+
+                if (i === gameState.currentStage) {
+                    stepEl.classList.remove('opacity-50');
+                    icon.className = "step-icon w-9 h-9 rounded-full bg-jambi-gold text-black flex items-center justify-center font-bold mb-1 shadow-lg ring-2 ring-yellow-300";
+                    text.className = "text-jambi-gold font-bold";
+                } else if (i < gameState.currentStage) {
+                    stepEl.classList.remove('opacity-50');
+                    icon.className = "step-icon w-9 h-9 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold mb-1";
+                    icon.innerHTML = '<i class="fa-solid fa-check"></i>';
+                    text.className = "text-emerald-400";
+                } else {
+                    stepEl.classList.add('opacity-50');
+                    icon.className = "step-icon w-9 h-9 rounded-full bg-gray-800 border border-gray-700 text-gray-400 flex items-center justify-center font-bold mb-1";
+                    icon.innerText = i;
+                    text.className = "text-gray-400";
+                }
+            }
+        }
+
+        function renderStage(stageNum) {
+            gameState.currentStage = stageNum;
+            updateHeader();
+            const container = document.getElementById('game-card');
+
+            if (stageNum === 1) renderStage1(container);
+            else if (stageNum === 2) renderStage2(container);
+            else if (stageNum === 3) renderStage3(container);
+            else if (stageNum === 4) renderStage4(container);
+            else if (stageNum === 5) renderStage5(container);
+        }
+
+        // --- STAGE 1: HEURISTIK ---
+        let heuristikSelected = {};
+
+        function renderStage1(container) {
+            const data = gameData.stage1;
+            let html = `
+                <div class="mb-6">
+                    <span class="inline-block px-3 py-1 bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-full text-xs font-semibold mb-2">Langkah 1 dari 5</span>
+                    <h2 class="text-xl md:text-2xl font-bold font-title text-jambi-gold">${data.title}</h2>
+                    <p class="text-gray-300 text-sm mt-1">${data.misi}</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            `;
+
+            data.items.forEach(item => {
+                html += `
+                    <div class="bg-gray-800/80 border border-gray-700 rounded-xl p-4 flex flex-col justify-between hover:border-gray-500 transition">
+                        <div>
+                            <div class="flex items-center space-x-2 text-xs font-semibold text-amber-400 mb-1">
+                                <i class="fa-solid fa-cube"></i>
+                                <span>${item.type}</span>
+                            </div>
+                            <h4 class="font-bold text-gray-100 text-sm mb-1">${item.name}</h4>
+                            <p class="text-xs text-gray-400 mb-3">${item.desc}</p>
+                        </div>
+                        <div class="mt-2">
+                            <label class="block text-xs text-gray-400 mb-1">Kategorikan sebagai:</label>
+                            <select id="select-heuristik-${item.id}" onchange="heuristikSelected[${item.id}] = this.value" class="w-full bg-gray-900 border border-gray-700 text-sm rounded-lg p-2 text-gray-200 focus:ring-2 focus:ring-jambi-gold focus:outline-none">
+                                <option value="">-- Pilih Kategori Sumber --</option>
+                                <option value="primer">Sumber Primer (Bukti Asli Zaman Terkait)</option>
+                                <option value="sekunder">Sumber Sekunder (Kajian/Buku Masa Kini)</option>
+                                <option value="lisan">Sumber Lisan (Keterangan Pelaku/Saksi/Tokoh)</option>
+                            </select>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                </div>
+                <button onclick="checkStage1()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-jambi-gold text-black font-bold rounded-xl shadow-lg hover:brightness-110 transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <span>Verifikasi Pengelompokan Sumber</span>
+                </button>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function checkStage1() {
+            const data = gameData.stage1.items;
+            let correctCount = 0;
+
+            for (let item of data) {
+                const userVal = heuristikSelected[item.id];
+                if (!userVal) {
+                    showModal('warning', 'Peringatan', 'Silakan pilih kategori untuk semua sumber bukti sejarah yang tersedia!');
+                    return;
+                }
+                if (userVal === item.category) {
+                    correctCount++;
+                }
+            }
+
+            if (correctCount === data.length) {
+                gameState.score += 100;
+                showModal('success', 'Hebat! Pengumpulan Sumber Sukses!', 'Kamu berhasil mengklasifikasikan seluruh sumber sejarah lokal Jambi dengan tepat pada tahap Heuristik (+100 Skor).', () => {
+                    renderStage(2);
+                });
+            } else {
+                showModal('error', 'Coba Lagi', `Kamu benar ${correctCount} dari ${data.length} sumber. Ingat: Sumber Primer dibuat langsung saat peristiwa/jaman tersebut, Sekunder adalah buatan sejarawan kemudian, dan Lisan berasal dari tuturan.`);
+            }
+        }
+
+        // --- STAGE 2: KRITIK SUMBER ---
+        function renderStage2(container) {
+            const data = gameData.stage2;
+            let html = `
+                <div class="mb-6">
+                    <span class="inline-block px-3 py-1 bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-full text-xs font-semibold mb-2">Langkah 2 dari 5</span>
+                    <h2 class="text-xl md:text-2xl font-bold font-title text-jambi-gold">${data.title}</h2>
+                    <p class="text-gray-300 text-sm mt-1">${data.misi}</p>
+                </div>
+
+                <div class="space-y-6 mb-6">
+            `;
+
+            data.questions.forEach(q => {
+                html += `
+                    <div class="bg-gray-800/60 border border-gray-700 rounded-xl p-5">
+                        <h3 class="font-bold text-amber-400 text-base mb-2"><i class="fa-solid fa-shield-halved mr-2"></i>${q.title}</h3>
+                        <p class="text-sm text-gray-200 mb-4 bg-gray-900/60 p-3 rounded-lg border border-gray-800">${q.context}</p>
+                        <div class="space-y-2">
+                `;
+
+                q.options.forEach((opt, idx) => {
+                    html += `
+                        <label class="flex items-start space-x-3 p-3 rounded-lg border border-gray-700 hover:bg-gray-700/50 cursor-pointer transition">
+                            <input type="radio" name="${q.id}" value="${idx}" class="mt-1 accent-amber-400" onchange="gameState.kritikAnswers['${q.id}'] = ${idx}">
+                            <span class="text-xs md:text-sm text-gray-300">${opt.text}</span>
+                        </label>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += `
+                </div>
+                <button onclick="checkStage2()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-jambi-gold text-black font-bold rounded-xl shadow-lg hover:brightness-110 transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-check-double"></i>
+                    <span>Uji Keabsahan & Kredibilitas Sumber</span>
+                </button>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function checkStage2() {
+            const qData = gameData.stage2.questions;
+            let q1Ans = gameState.kritikAnswers['q1'];
+            let q2Ans = gameState.kritikAnswers['q2'];
+
+            if (q1Ans === undefined || q2Ans === undefined) {
+                showModal('warning', 'Peringatan', 'Harap jawab semua pertanyaan kritik sumber!');
+                return;
+            }
+
+            let correct = (qData[0].options[q1Ans].correct && qData[1].options[q2Ans].correct);
+
+            if (correct) {
+                gameState.score += 100;
+                showModal('success', 'Kritik Sumber Berhasil!', 'Kamu mampu membedakan Kritik Ekstern (otentisitas fisik) dan Kritik Intern (kredibilitas isi) dengan tepat (+100 Skor)!', () => {
+                    renderStage(3);
+                });
+            } else {
+                showModal('error', 'Analisis Kurang Tepat', 'Kritik Ekstern berfokus pada fisik/keaslian bahan naskah, sedangkan Kritik Intern berfokus pada kebenaran isi informasi.');
+            }
+        }
+
+        // --- STAGE 3: INTERPRETASI ---
+        let selectedFact = null;
+        let selectedMeaning = null;
+        let matchedPairs = 0;
+
+        function renderStage3(container) {
+            const data = gameData.stage3;
+            selectedFact = null;
+            selectedMeaning = null;
+            matchedPairs = 0;
+
+            let html = `
+                <div class="mb-6">
+                    <span class="inline-block px-3 py-1 bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-full text-xs font-semibold mb-2">Langkah 3 dari 5</span>
+                    <h2 class="text-xl md:text-2xl font-bold font-title text-jambi-gold">${data.title}</h2>
+                    <p class="text-gray-300 text-sm mt-1">${data.misi}</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <!-- Kolom Fakta -->
+                    <div class="space-y-3">
+                        <h3 class="text-sm font-bold text-amber-400 uppercase tracking-wider mb-2 flex items-center">
+                            <i class="fa-solid fa-puzzle-piece mr-2"></i> Fakta Sejarah Lapangan
+                        </h3>
+            `;
+
+            data.pairs.forEach((p, idx) => {
+                html += `
+                    <div id="fact-${idx}" onclick="selectFact(${idx})" class="p-4 bg-gray-800 border border-gray-700 rounded-xl cursor-pointer hover:border-amber-400 transition text-xs md:text-sm text-gray-200">
+                        ${p.fact}
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                    <!-- Kolom Makna / Sintesis -->
+                    <div class="space-y-3">
+                        <h3 class="text-sm font-bold text-emerald-400 uppercase tracking-wider mb-2 flex items-center">
+                            <i class="fa-solid fa-lightbulb mr-2"></i> Penafsiran / Makna (Sintesis)
+                        </h3>
+            `;
+
+            // Acak urutan kanan agar ada tantangan
+            const shuffledMeanings = [...data.pairs].map((p, originalIdx) => ({ meaning: p.meaning, originalIdx })).sort(() => Math.random() - 0.5);
+
+            shuffledMeanings.forEach((m) => {
+                html += `
+                    <div id="meaning-${m.originalIdx}" onclick="selectMeaning(${m.originalIdx})" class="p-4 bg-gray-800 border border-gray-700 rounded-xl cursor-pointer hover:border-emerald-400 transition text-xs md:text-sm text-gray-200">
+                        ${m.meaning}
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                </div>
+
+                <div class="p-4 bg-gray-900/80 rounded-xl border border-gray-800 text-center text-xs text-gray-400 mb-6">
+                    Klik 1 kartu Fakta di kiri, lalu klik 1 Penafsiran yang sesuai di kanan.
+                </div>
+
+                <button onclick="checkStage3()" class="w-full py-3 bg-gradient-to-r from-amber-500 to-jambi-gold text-black font-bold rounded-xl shadow-lg hover:brightness-110 transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-link"></i>
+                    <span>Selesaikan Penafsiran Sejarah</span>
+                </button>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function selectFact(idx) {
+            if (document.getElementById(`fact-${idx}`).classList.contains('bg-emerald-900/50')) return;
+            
+            // Clear previous selection
+            for (let i = 0; i < 3; i++) {
+                const el = document.getElementById(`fact-${i}`);
+                if (el && !el.classList.contains('bg-emerald-900/50')) {
+                    el.classList.remove('border-amber-400', 'bg-amber-900/30');
+                }
+            }
+            
+            selectedFact = idx;
+            document.getElementById(`fact-${idx}`).classList.add('border-amber-400', 'bg-amber-900/30');
+            tryMatch();
+        }
+
+        function selectMeaning(originalIdx) {
+            if (document.getElementById(`meaning-${originalIdx}`).classList.contains('bg-emerald-900/50')) return;
+
+            // Clear previous selection
+            for (let i = 0; i < 3; i++) {
+                const el = document.getElementById(`meaning-${i}`);
+                if (el && !el.classList.contains('bg-emerald-900/50')) {
+                    el.classList.remove('border-emerald-400', 'bg-emerald-900/30');
+                }
+            }
+
+            selectedMeaning = originalIdx;
+            document.getElementById(`meaning-${originalIdx}`).classList.add('border-emerald-400', 'bg-emerald-900/30');
+            tryMatch();
+        }
+
+        function tryMatch() {
+            if (selectedFact !== null && selectedMeaning !== null) {
+                if (selectedFact === selectedMeaning) {
+                    // Correct Match
+                    const fEl = document.getElementById(`fact-${selectedFact}`);
+                    const mEl = document.getElementById(`meaning-${selectedMeaning}`);
+
+                    fEl.className = "p-4 bg-emerald-900/50 border border-emerald-500 rounded-xl text-xs md:text-sm text-emerald-200 opacity-80 pointer-events-none";
+                    mEl.className = "p-4 bg-emerald-900/50 border border-emerald-500 rounded-xl text-xs md:text-sm text-emerald-200 opacity-80 pointer-events-none";
+
+                    fEl.innerHTML += ' <i class="fa-solid fa-circle-check text-emerald-400 ml-2"></i>';
+                    mEl.innerHTML += ' <i class="fa-solid fa-circle-check text-emerald-400 ml-2"></i>';
+
+                    matchedPairs++;
+                    selectedFact = null;
+                    selectedMeaning = null;
+                } else {
+                    // Reset selection animation
+                    setTimeout(() => {
+                        if (selectedFact !== null) {
+                            const fEl = document.getElementById(`fact-${selectedFact}`);
+                            if(fEl) fEl.classList.remove('border-amber-400', 'bg-amber-900/30');
+                        }
+                        if (selectedMeaning !== null) {
+                            const mEl = document.getElementById(`meaning-${selectedMeaning}`);
+                            if(mEl) mEl.classList.remove('border-emerald-400', 'bg-emerald-900/30');
+                        }
+                        selectedFact = null;
+                        selectedMeaning = null;
+                    }, 400);
+                }
+            }
+        }
+
+        function checkStage3() {
+            if (matchedPairs === 3) {
+                gameState.score += 100;
+                showModal('success', 'Interpretasi Tepat!', 'Kamu telah berhasil menghubungkan bukti empiris dengan penafsiran makna sejarah Jambi secara logis (+100 Skor).', () => {
+                    renderStage(4);
+                });
+            } else {
+                showModal('warning', 'Belum Selesai', `Kamu baru mencocokkan ${matchedPairs} dari 3 penafsiran fakta sejarah. Mari pasangkan semuanya!`);
+            }
+        }
+
+        // --- STAGE 4: HISTORIOGRAFI ---
+        let userOrder = [];
+
+        function renderStage4(container) {
+            const data = gameData.stage4;
+            userOrder = [];
+
+            // Shuffle display
+            const shuffled = [...data.paragraphs].sort(() => Math.random() - 0.5);
+
+            let html = `
+                <div class="mb-6">
+                    <span class="inline-block px-3 py-1 bg-amber-500/20 text-amber-400 border border-amber-500/30 rounded-full text-xs font-semibold mb-2">Langkah 4 dari 5</span>
+                    <h2 class="text-xl md:text-2xl font-bold font-title text-jambi-gold">${data.title}</h2>
+                    <p class="text-gray-300 text-sm mt-1">${data.misi}</p>
+                </div>
+
+                <div class="space-y-3 mb-6" id="paragraph-container">
+            `;
+
+            shuffled.forEach((p) => {
+                html += `
+                    <div id="para-${p.id}" onclick="toggleParagraphOrder('${p.id}')" class="p-4 bg-gray-800 border border-gray-700 rounded-xl cursor-pointer hover:border-amber-400 transition text-sm text-gray-200 flex items-start space-x-3">
+                        <span id="badge-${p.id}" class="w-6 h-6 rounded-full bg-gray-700 text-gray-300 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">?</span>
+                        <p class="leading-relaxed">${p.text}</p>
+                    </div>
+                `;
+            });
+
+            html += `
+                </div>
+
+                <div class="flex space-x-3 mb-6">
+                    <button onclick="resetHistoriografi()" class="w-1/3 py-3 bg-gray-800 border border-gray-700 text-gray-300 font-semibold rounded-xl hover:bg-gray-700 transition">
+                        Reset Urutan
+                    </button>
+                    <button onclick="checkStage4()" class="w-2/3 py-3 bg-gradient-to-r from-amber-500 to-jambi-gold text-black font-bold rounded-xl shadow-lg hover:brightness-110 transition flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-feather-pointed"></i>
+                        <span>Terbitkan Karya Historiografi</span>
+                    </button>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function toggleParagraphOrder(id) {
+            const index = userOrder.indexOf(id);
+            if (index > -1) {
+                // Remove
+                userOrder.splice(index, 1);
+            } else {
+                if (userOrder.length < 3) {
+                    userOrder.push(id);
+                }
+            }
+            updateHistoriografiUI();
+        }
+
+        function updateHistoriografiUI() {
+            const allIds = ["p1", "p2", "p3"];
+            allIds.forEach(id => {
+                const el = document.getElementById(`para-${id}`);
+                const badge = document.getElementById(`badge-${id}`);
+                const orderIdx = userOrder.indexOf(id);
+
+                if (orderIdx > -1) {
+                    el.className = "p-4 bg-amber-950/40 border-2 border-jambi-gold rounded-xl cursor-pointer transition text-sm text-gray-100 flex items-start space-x-3";
+                    badge.className = "w-6 h-6 rounded-full bg-jambi-gold text-black flex items-center justify-center text-xs font-bold shrink-0 mt-0.5";
+                    badge.innerText = orderIdx + 1;
+                } else {
+                    el.className = "p-4 bg-gray-800 border border-gray-700 rounded-xl cursor-pointer hover:border-amber-400 transition text-sm text-gray-200 flex items-start space-x-3";
+                    badge.className = "w-6 h-6 rounded-full bg-gray-700 text-gray-300 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5";
+                    badge.innerText = "?";
+                }
+            });
+        }
+
+        function resetHistoriografi() {
+            userOrder = [];
+            updateHistoriografiUI();
+        }
+
+        function checkStage4() {
+            if (userOrder.length < 3) {
+                showModal('warning', 'Belum Lengkap', 'Urutkan ketiga paragraf menjadi narasi kronologis sejarah yang runtut!');
+                return;
+            }
+
+            if (userOrder[0] === 'p1' && userOrder[1] === 'p2' && userOrder[2] === 'p3') {
+                gameState.score += 100;
+                showModal('success', 'Historiografi Runtut!', 'Luar biasa! Penulisan narasi kronologis Sultan Thaha Syaifuddin terasosiasi dengan baik (+100 Skor).', () => {
+                    renderStage(5);
+                });
+            } else {
+                showModal('error', 'Urutan Kurang Runtut', 'Penulisan Sejarah (Historiografi) harus memperhatikan Kronologi: dimulai dari latar belakang (naik tahta), konflik (penyerangan Belanda), hingga akhir perjuangan (gugur).');
+            }
+        }
+
+        // --- STAGE 5: KUIS REFLEKSI ---
+        function renderStage5(container) {
+            const data = gameData.stage5;
+            const q = data.questions[gameState.quizIndex];
+
+            if (!q) {
+                // Game Finished
+                renderFinalSummary(container);
+                return;
+            }
+
+            let html = `
+                <div class="mb-6">
+                    <span class="inline-block px-3 py-1 bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-full text-xs font-semibold mb-2">Evaluasi Akhir • Soal ${gameState.quizIndex + 1} dari ${data.questions.length}</span>
+                    <h2 class="text-xl md:text-2xl font-bold font-title text-jambi-gold">${data.title}</h2>
+                    <p class="text-gray-300 text-sm mt-1">Uji pemahamanmu tentang metode penelitian sejarah!</p>
+                </div>
+
+                <div class="bg-gray-800/80 border border-gray-700 rounded-xl p-5 mb-6">
+                    <p class="text-base font-semibold text-gray-100 mb-4 leading-relaxed">${q.q}</p>
+                    <div class="space-y-3">
+            `;
+
+            q.a.forEach((opt, idx) => {
+                html += `
+                    <button onclick="answerQuiz(${idx})" class="w-full text-left p-4 rounded-xl border border-gray-700 bg-gray-900/60 hover:border-jambi-gold hover:bg-gray-800 transition text-sm text-gray-200 flex items-center justify-between group">
+                        <span>${opt}</span>
+                        <i class="fa-solid fa-chevron-right text-gray-500 group-hover:text-jambi-gold transition"></i>
+                    </button>
+                `;
+            });
+
+            html += `
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = html;
+        }
+
+        function answerQuiz(idx) {
+            const q = gameData.stage5.questions[gameState.quizIndex];
+            if (idx === q.c) {
+                gameState.score += 25;
+                gameState.quizScore += 25;
+            }
+            gameState.quizIndex++;
+            renderStage5(document.getElementById('game-card'));
+        }
+
+        function renderFinalSummary(container) {
+            let badgeTitle = "Detektif Sejarah Pemula";
+            let badgeIcon = "fa-scroll";
+            if (gameState.score >= 350) {
+                badgeTitle = "Sejarawan Utama Jambi (Sangat Baik)";
+                badgeIcon = "fa-crown";
+            } else if (gameState.score >= 250) {
+                badgeTitle = "Peneliti Sejarah Handal (Baik)";
+                badgeIcon = "fa-award";
+            }
+
+            container.innerHTML = `
+                <div class="text-center py-6">
+                    <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-tr from-jambi-gold to-yellow-300 flex items-center justify-center text-black text-4xl mb-4 shadow-xl">
+                        <i class="fa-solid ${badgeIcon}"></i>
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-bold font-title text-jambi-gold mb-2">SELAMAT! KAMU MEMENUHI MISI SEJARAH</h2>
+                    <p class="text-gray-300 text-sm max-w-lg mx-auto mb-6">
+                        Kamu telah menyelesaikan seluruh tahapan metode penelitian sejarah lokal Jambi (Heuristik, Kritik, Interpretasi, dan Historiografi).
+                    </p>
+
+                    <div class="grid grid-cols-2 max-w-md mx-auto gap-4 mb-8">
+                        <div class="bg-gray-900/80 p-4 rounded-xl border border-gray-800">
+                            <span class="block text-xs text-gray-400">Total Skor Penelitian</span>
+                            <span class="text-2xl font-bold text-amber-400">${gameState.score} Poin</span>
+                        </div>
+                        <div class="bg-gray-900/80 p-4 rounded-xl border border-gray-800">
+                            <span class="block text-xs text-gray-400">Gelar Capaian</span>
+                            <span class="text-xs font-bold text-emerald-400 mt-1 block">${badgeTitle}</span>
+                        </div>
+                    </div>
+
+                    <div class="p-4 bg-jambi-darkred/40 border border-jambi-red/50 rounded-xl max-w-xl mx-auto text-left text-xs text-gray-300 mb-8 space-y-2">
+                        <p class="font-bold text-amber-300 text-sm mb-1"><i class="fa-solid fa-book-bookmark mr-2"></i>Rangkuman Pembelajaran Sejarah Fase E:</p>
+                        <p>1. <strong>Heuristik:</strong> Pengumpulan sumber (situs Candi Muaro Jambi, Naskah Incung, Prasasti Karang Brahi).</p>
+                        <p>2. <strong>Kritik Sumber:</strong> Pengujian fisik (Ekstern) dan kebenaran isi (Intern).</p>
+                        <p>3. <strong>Interpretasi:</strong> Penafsiran fakta-fakta sejarah menjadi kesatuan makna.</p>
+                        <p>4. <strong>Historiografi:</strong> Penulisan narasi sejarah yang runtut dan kronologis (seperti kisah Sultan Thaha).</p>
+                    </div>
+
+                    <button onclick="restartGame()" class="px-8 py-3 bg-gradient-to-r from-amber-500 to-jambi-gold text-black font-bold rounded-xl shadow-lg hover:brightness-110 transition">
+                        <i class="fa-solid fa-rotate-right mr-2"></i>Mainkan Ulang Game
+                    </button>
+                </div>
+            `;
+        }
+
+        function restartGame() {
+            gameState.currentStage = 1;
+            gameState.score = 0;
+            gameState.quizIndex = 0;
+            gameState.quizScore = 0;
+            heuristikSelected = {};
+            gameState.kritikAnswers = {};
+            renderStage(1);
+        }
+
+        // Helper Functions
+        let modalCallback = null;
+
+        function showModal(type, title, desc, callback = null) {
+            const modal = document.getElementById('feedback-modal');
+            const box = document.getElementById('modal-box');
+            const icon = document.getElementById('modal-icon');
+            const titleEl = document.getElementById('modal-title');
+            const descEl = document.getElementById('modal-desc');
+
+            modalCallback = callback;
+
+            if (type === 'success') {
+                icon.className = "w-16 h-16 mx-auto rounded-full flex items-center justify-center text-3xl mb-4 bg-emerald-500/20 text-emerald-400 border border-emerald-500/40";
+                icon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+                titleEl.className = "text-xl font-bold mb-2 text-emerald-400";
+            } else if (type === 'error') {
+                icon.className = "w-16 h-16 mx-auto rounded-full flex items-center justify-center text-3xl mb-4 bg-rose-500/20 text-rose-400 border border-rose-500/40";
+                icon.innerHTML = '<i class="fa-solid fa-circle-xmark"></i>';
+                titleEl.className = "text-xl font-bold mb-2 text-rose-400";
+            } else {
+                icon.className = "w-16 h-16 mx-auto rounded-full flex items-center justify-center text-3xl mb-4 bg-amber-500/20 text-amber-400 border border-amber-500/40";
+                icon.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+                titleEl.className = "text-xl font-bold mb-2 text-amber-400";
+            }
+
+            titleEl.innerText = title;
+            descEl.innerText = desc;
+
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                box.classList.remove('scale-95', 'opacity-0');
+                box.classList.add('scale-100', 'opacity-100');
+            }, 10);
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('feedback-modal');
+            const box = document.getElementById('modal-box');
+
+            box.classList.remove('scale-100', 'opacity-100');
+            box.classList.add('scale-95', 'opacity-0');
+
+            setTimeout(() => {
+                modal.classList.add('hidden');
+                if (modalCallback) {
+                    modalCallback();
+                    modalCallback = null;
+                }
+            }, 200);
+        }
+    </script>
+</body>
+</html>
